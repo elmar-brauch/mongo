@@ -1,9 +1,11 @@
 package de.bsi.mongo;
 
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+
+import de.bsi.mongo.model.Employee;
 
 //String: Type of Employee ID.
 public interface EmployeeRepository extends MongoRepository<Employee, String> {
@@ -12,5 +14,5 @@ public interface EmployeeRepository extends MongoRepository<Employee, String> {
  
     List<Employee> findByFullNameLike(String fullName);
  
-    List<Employee> findByHireDateGreaterThan(Instant hireDate);
+    List<Employee> findByHireDateGreaterThan(LocalDate hireDate);
 }

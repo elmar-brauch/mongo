@@ -9,7 +9,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -26,8 +26,8 @@ import org.springframework.data.domain.Pageable;
 
 import com.mongodb.MongoExecutionTimeoutException;
 
-import de.bsi.mongo.Employee;
 import de.bsi.mongo.EmployeeRepository;
+import de.bsi.mongo.model.Employee;
 
 @SpringBootTest(classes = EmployeeService.class)
 @ExtendWith(MockitoExtension.class)
@@ -37,17 +37,13 @@ class EmployeeServiceTest {
 	@MockBean private EmployeePrinter printerMock;
 	@Autowired private EmployeeService service;
 	
-	private Employee testEmployee1 = new Employee();
-	private Employee testEmployee2 = new Employee();
+	private Employee testEmployee1;
+	private Employee testEmployee2;
 	
 	@BeforeEach
 	void createTestData() {
-		testEmployee1.setEmpNo("1898");
-		testEmployee1.setFullName("Elmar Brauch");
-		testEmployee1.setHireDate(Instant.now());
-		testEmployee2.setEmpNo("001");
-		testEmployee2.setFullName("Tony Stark");
-		testEmployee2.setHireDate(Instant.EPOCH);
+		testEmployee1 = new Employee("1898", "Elmar Brauch", LocalDate.now(), null);
+		testEmployee2 = new Employee("001", "Tony Stark", LocalDate.EPOCH, null);
 	}
 	
 	@Test 
@@ -95,6 +91,6 @@ class EmployeeServiceTest {
 		
 		var newEmployee = empCaptor.getValue();
 		assertEquals("Mr. PARKER", newEmployee.getFullName());
-		assertTrue(newEmployee.getHireDate().isBefore(Instant.now()));
+		assertEquals(LocalDate.now(), newEmployee.getHireDate());
 	}
 }

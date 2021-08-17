@@ -3,14 +3,16 @@ package de.bsi.mongo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import de.bsi.mongo.model.Address;
+import de.bsi.mongo.model.Employee;
 
 @SpringBootTest
 class MongoDemoApplicationTests {
@@ -22,23 +24,18 @@ class MongoDemoApplicationTests {
 	void initDatabase() {
 		employeeRepo.deleteAll();
 		
-		var uwe = new Employee();
-		uwe.setEmpNo("123");
-		uwe.setFullName("Uwe Mustermann");
-		uwe.setHireDate(Instant.now());
-		
-		var elmar = new Employee();
-		elmar.setEmpNo("456");
-		elmar.setFullName("Elmar Brauch");
-		elmar.setHireDate(Instant.parse("2010-08-01T10:15:30.00Z"));
+		var address1 = new Address("Musterstadt", "Musterstr. 123");
+		var uwe = new Employee(
+				"123", "Uwe Mustermann", LocalDate.now(), address1);		
+		var elmar = new Employee(
+				"456", "Elmar Brauch", LocalDate.parse("2010-08-01"), null);
 		
 		employeeRepo.insert(List.of(uwe, elmar));
 	}
 	
 	@Test
 	void addOneEmployee() {
-		var bill = new Employee();
-		bill.setFullName("Bill Gates");
+		var bill = new Employee(null, "Bill Gates", null, null);
 		employeeRepo.insert(bill);
 		assertEquals(3, employeeRepo.count());
 	}
@@ -52,8 +49,8 @@ class MongoDemoApplicationTests {
 	
 	@Test
 	void findByHireDate() {
-		assertTrue(employeeRepo.findByHireDateGreaterThan(Instant.now()).isEmpty());
-		var yesterday = Instant.now().minus(1, ChronoUnit.DAYS);
+		assertTrue(employeeRepo.findByHireDateGreaterThan(LocalDate.now()).isEmpty());
+		var yesterday = LocalDate.now().minusDays(1);
 		assertEquals(1, employeeRepo.findByHireDateGreaterThan(yesterday).size());
 	}
 }

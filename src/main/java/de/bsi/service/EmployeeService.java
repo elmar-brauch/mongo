@@ -1,14 +1,14 @@
 package de.bsi.service;
 
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import de.bsi.mongo.Employee;
 import de.bsi.mongo.EmployeeRepository;
+import de.bsi.mongo.model.Employee;
 
 @Service
 public class EmployeeService {
@@ -30,10 +30,9 @@ public class EmployeeService {
 	}
 	
 	public void storeNewEmployee(String name) {
-		var employee = new Employee();
-		employee.setEmpNo("00X");
-		employee.setFullName("Mr. " + name.toUpperCase());
-		employee.setHireDate(Instant.now());
+		var modifiedName = "Mr. " + name.toUpperCase();
+		var employee = new Employee(
+				"00X", modifiedName, LocalDate.now());
 		repo.save(employee);
 	}
 	

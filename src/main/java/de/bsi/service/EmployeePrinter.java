@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import de.bsi.mongo.Employee;
+import de.bsi.mongo.model.Employee;
 
 @Component
 public class EmployeePrinter {
